@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Maps test</title>
+</head>
+<body>
+<div id="map1" style="width: 100%; float: left; height: 600px;"></div>
+<div id="map2" style="width:  100%; float: left; height: 600px;"></div>
+
+<script src='http://code.jquery.com/jquery.min.js' type='text/javascript'></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+
+<script>
+
+    function initialize(MapId , sites) {
+
+        var centerMap = new google.maps.LatLng(46.8481443, 2.2037494);// Setup where the map should be centred
+
+        var myOptions = {
+            zoom: 6, // Zoom level
+            center: centerMap,
+            mapTypeId: google.maps.MapTypeId.ROADMAP // type of the map
+        }
+
+        var map = new google.maps.Map(document.getElementById(MapId), myOptions); // setup the map dom
+
+        setMarkers(map, sites);
+        infowindow = new google.maps.InfoWindow({
+            content: "loading..."
+        });
+
+        var bikeLayer = new google.maps.BicyclingLayer();
+        bikeLayer.setMap(map);
+    }
+
+    function setMarkers(map, markers) {
+
+        for (var i = 0; i < markers.length; i++) {
+            var sites = markers[i];
+            var siteLatLng = new google.maps.LatLng(sites[1], sites[2]);
+            var marker = new google.maps.Marker({
+                position: siteLatLng,
+                map: map,
+                title: sites[0],
+                zIndex: sites[3],
+                html: sites[4]
+            });
+
+            var contentString = "Some content";
+
+            google.maps.event.addListener(marker, "click", function () {
+
+                infowindow.setContent(this.html);
+                infowindow.open(map, this);
+            });
+        }
+    }
+    var sitesJura = [
+        ['Title Location', 46.,5.3, 4, 'Title Location <img="..."><a href="">Voir les annonceurs </a>'],
+
+    ];
+
+    $(document).ready(function() {
+        initialize("map1", sitesJura);
+    });
+</script>
+</body>
+</html>
